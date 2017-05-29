@@ -9,6 +9,9 @@
 ## What is FileIo?
 Common is a library packed with small re-usable utilities and helpers
 
+## Requirments
+For larger usage, minimum version is PHP 5.5
+
 ## Instalation
 Create/add to composer.json
 ```

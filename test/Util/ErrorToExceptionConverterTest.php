@@ -1,8 +1,8 @@
 <?php
 namespace NeedleProject\Common\Util;
 
-use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\Error\Error;
+use PHPUnit_Framework_TestCase as TestCase;
+use PHPUnit_Framework_Error as Error;
 
 class ErrorToExceptionConverterTest extends TestCase
 {
@@ -35,7 +35,7 @@ class ErrorToExceptionConverterTest extends TestCase
     }
 
     /**
-     * //expectedException \
+     * @expectedException \PHPUnit_Framework_Error
      */
     public function testRestore()
     {
@@ -51,7 +51,7 @@ class ErrorToExceptionConverterTest extends TestCase
         }
 
         $exceptionConverter->restoreErrorHandler();
-        $this->expectException(Error::class);
+        $this->expectException(\PHPUnit_Framework_Error::class);
         $this->expectExceptionMessage('Dummy');
         trigger_error("Dummy", E_USER_ERROR);
     }
