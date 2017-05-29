@@ -3,6 +3,7 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/needle-project/common/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/needle-project/common/?branch=master)
 [![Code Coverage](https://scrutinizer-ci.com/g/needle-project/common/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/needle-project/common/?branch=master)
 [![Build Status](https://scrutinizer-ci.com/g/needle-project/common/badges/build.png?b=master)](https://scrutinizer-ci.com/g/needle-project/common/build-status/master)
+[![Build Status](https://travis-ci.org/needle-project/common.svg?branch=master)](https://travis-ci.org/needle-project/common)
 
 # README
 
