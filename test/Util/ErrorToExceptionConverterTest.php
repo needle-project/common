@@ -36,6 +36,7 @@ class ErrorToExceptionConverterTest extends TestCase
 
     /**
      * @expectedException \PHPUnit_Framework_Error
+     * @expectedExceptionMessage Dummy
      */
     public function testRestore()
     {
@@ -51,8 +52,6 @@ class ErrorToExceptionConverterTest extends TestCase
         }
 
         $exceptionConverter->restoreErrorHandler();
-        $this->expectException(\PHPUnit_Framework_Error::class);
-        $this->expectExceptionMessage('Dummy');
         trigger_error("Dummy", E_USER_ERROR);
     }
 }

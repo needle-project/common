@@ -35,7 +35,7 @@ class ErrorToExceptionConverter
      *                        See http://php.net/manual/en/errorfunc.constants.php
      * @param string|null $exceptionClass
      */
-    public function convertErrorsToExceptions(int $level = null, string $exceptionClass = null)
+    public function convertErrorsToExceptions($level = null, $exceptionClass = null)
     {
         $this->isHandledLocal = true;
         if (is_null($level)) {
