@@ -134,6 +134,14 @@ class ArrayHelperTest extends TestCase
                     ]
                 ],
                 ['foo', 'foo', 'foo', 'foo', 'foo', 'bar']
+            ],
+            [
+                [
+                    'foo' => [
+                        'bar' => 'baz'
+                    ]
+                ],
+                ['foo', 'bar', 'baz']
             ]
         ];
     }

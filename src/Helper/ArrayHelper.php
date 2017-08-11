@@ -19,107 +19,84 @@ use NeedleProject\Common\Exception\NotFoundException;
  */
 class ArrayHelper
 {
+    const USAGE_EXISTS = 'hasKey';
+    const USAGE_EXTRACT = 'getValue';
+
     /**
      * Verify if a key exist in depth
      *
-     * @param array $array  - The array in which to search
+     * @param array $haystack  - The array in which to search
      * @param array $keys - an array with the linear items treated as depth.
      *                      Ex: array('first_level','second_level','third_level')
-     * @todo    Refactor in a "non-breaking" mather - to many breaks
-     *          Improve design
      * @return bool
+     * @throws \NeedleProject\Common\Exception\NotFoundException
      */
-    public function hasKeysInDepth($array, $keys)
+    public function hasKeysInDepth($haystack, $keys)
     {
-        if (!is_array($array) || empty($array)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    "Cannot search keys in depth, expected a non-empty haystack array, got %s or empty array.",
-                    gettype($array)
-                )
-            );
-        }
-        if (!is_array($keys) || empty($keys)) {
-            throw new \InvalidArgumentException(
-                sprintf(
-                    "Cannot search keys in depth, expected a non-empty keys array, got %s or empty array.",
-                    gettype($array)
-                )
-            );
-        }
-
-        $result = false;
-        $haystack = $array;
-        $depth = count($keys);
-        for ($i = 0; $i < $depth; $i++) {
-            $isLast = ($i + 1) === $depth;
-            $needle = $keys[$i];
-            if ($isLast && array_key_exists($needle, $haystack)) {
-                $result = true;
-                break;
-            }
-            if (!isset($haystack[$needle])) {
-                $result = false;
-                break;
-            }
-            $haystack = $haystack[$needle];
-            if (!is_array($haystack)) {
-                $result = false;
-                break;
-            }
-        }
-        return $result;
+        $this->validateInput($haystack, $keys);
+        return $this->getNode($haystack, $keys, static::USAGE_EXISTS);
     }
 
     /**
      * Get a value in depth of an array
-     * @param $array - The array in which to search
-     * @param $keys - an array with the linear items treated as depth.
-     *                 Ex: array('first_level','second_level','third_level')
-     * @return string
-     * @todo    Refactor in a "non-breaking" mather - to many breaks
-     *          Improve design
-     * @throws \Exception
+     *
+     * @param array $haystack - The array in which to search
+     * @param array $keys     - an array with the linear items treated as depth.
+     *                          Ex: array('first_level','second_level','third_level')
+     * @return mixed
+     * @throws \NeedleProject\Common\Exception\NotFoundException
      */
-    public function getValueFromDepth($array, $keys)
+    public function getValueFromDepth($haystack, $keys)
     {
-        if (!is_array($array) || empty($array)) {
+        $this->validateInput($haystack, $keys);
+        return $this->getNode($haystack, $keys, static::USAGE_EXTRACT);
+    }
+
+    /**
+     * @param array  $haystack
+     * @param array  $keys
+     * @param string $searchType    Added search type to reuse the same code
+     *                              even if it increases the complexity (for ~20 line)
+     * @throws \NeedleProject\Common\Exception\NotFoundException
+     * @return mixed
+     */
+    private function getNode($haystack, $keys, $searchType)
+    {
+        $depth = count($keys);
+        for ($i = 0; $i < $depth; $i++) {
+            $needle = $keys[$i];
+            $isLast = ($i + 1) === $depth;
+            if ($isLast && array_key_exists($needle, $haystack)) {
+                $node = $haystack[$needle];
+                break;
+            }
+            if ($isLast || !isset($haystack[$needle]) || !is_array($haystack[$needle])) {
+                if (static::USAGE_EXISTS === $searchType) {
+                    return false;
+                }
+                throw new NotFoundException("Given path does not exists.");
+            }
+            $haystack = $haystack[$needle];
+        }
+        return (static::USAGE_EXISTS === $searchType) ? true : $node;
+    }
+
+    /**
+     * Validate if the given input are valid array
+     * @param array $haystack
+     * @param array $keys
+     */
+    private function validateInput($haystack, $keys)
+    {
+        if (!is_array($haystack) || empty($haystack)) {
             throw new \InvalidArgumentException(
-                sprintf(
-                    "Cannot get value in depth, expected a non-empty haystack array, got %s or empty array.",
-                    gettype($array)
-                )
+                "Provided input array is either empty or not an array."
             );
         }
         if (!is_array($keys) || empty($keys)) {
             throw new \InvalidArgumentException(
-                sprintf(
-                    "Cannot get value in depth, expected a non-empty keys array, got %s or empty array.",
-                    gettype($array)
-                )
+                "Provided input keys argument is either empty or not an array."
             );
         }
-        $result = '';
-        $haystack = $array;
-        $depth = count($keys);
-        for ($i = 0; $i < $depth; $i++) {
-            $isLast = ($i + 1) === $depth;
-            $needle = $keys[$i];
-            if ($isLast && array_key_exists($needle, $haystack)) {
-                $result = $haystack[$needle];
-                break;
-            }
-            if (!isset($haystack[$needle]) || !is_array($haystack[$needle])) {
-                throw new NotFoundException(
-                    sprintf(
-                        "Could not find requested value in %s for given path %s",
-                        json_encode($array),
-                        implode(' -> ', $keys)
-                    )
-                );
-            }
-            $haystack = $haystack[$needle];
-        }
-        return $result;
     }
 }
