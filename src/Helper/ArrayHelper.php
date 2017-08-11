@@ -63,6 +63,7 @@ class ArrayHelper
     private function getNode($haystack, $keys, $searchType)
     {
         $depth = count($keys);
+        $node = '';
         for ($i = 0; $i < $depth; $i++) {
             $needle = $keys[$i];
             $isLast = ($i + 1) === $depth;
