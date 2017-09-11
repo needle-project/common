@@ -6,7 +6,6 @@ class ClassFinderTest extends \PHPUnit_Framework_TestCase
     /**
      * @dataProvider provideScenarios
      * @param string $className
-     * @param string $extension
      * @param array $expectedFoundClasses
      */
     public function testClassSearch($className, $expectedFoundClasses)
