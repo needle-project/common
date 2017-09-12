@@ -1,6 +1,8 @@
 <?php
 namespace NeedleProject\Common;
 
+use Psr\Log\LoggerInterface;
+
 class ClassFinderTest extends \PHPUnit_Framework_TestCase
 {
     /**
@@ -24,6 +26,34 @@ class ClassFinderTest extends \PHPUnit_Framework_TestCase
         );
     }
 
+    /**
+     * Test that the Log will output - fixed to cover
+     */
+    public function testLogOutput()
+    {
+        $classFinder = new ClassFinder(
+            realpath(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'fixtures' . DIRECTORY_SEPARATOR,
+            \Fixture\BaseInterface::class
+        );
+
+        $loggerMock = $this->getMockBuilder(
+            LoggerInterface::class
+        );
+        $loggerMock = $loggerMock->getMock();
+        $loggerMock->expects($this->atLeastOnce())
+            ->method('log')
+            ->will($this->returnValue(null));
+
+        $classFinder->setLogger(
+            $loggerMock
+        );
+
+        $classFinder->findClasses();
+    }
+
+    /**
+     * @return array
+     */
     public function provideScenarios()
     {
         return [

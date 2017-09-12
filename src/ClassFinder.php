@@ -8,6 +8,7 @@
 namespace NeedleProject\Common;
 
 use Psr\Log\LoggerAwareTrait;
+use Psr\Log\LogLevel;
 
 /**
  * Class ErrorToExceptionConverter
