@@ -7,31 +7,132 @@
 
 # README
 
-## What is FileIo?
-Common is a library packed with small re-usable utilities and helpers
+## What is Common?
+Common is a library packed with small re-usable utilities and helpers. 
 
 ## Requirments
 For larger usage, minimum version is PHP 5.5
 
 ## Instalation
-Create/add to composer.json
 ```
-{
-  "require": {
-    "needle-project/common": "dev-master"
-  },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/needle-project/common"
-    }
-  ]
+composer require "needle-project/common"
+```
+## Content
+1. WordType convertor - Converts string to `camelCase`, `PascalCase` or `snake_case`
+2. ArrayHelper - searches if an array has a key in depth and retrieves the value
+3. Error to Exception - convert php errors to Exceptions
+4. ClassFinder - Searches for classes of a certain type.
+
+
+### 1. WordType convertor
+Converts a set of strings of typographical conventions between them.
+It handles `camelCase`, `PascalCase` and `snake_case`.
+**Usage**
+```
+<?php
+require_once 'vendor/autoload.php';
+
+use NeedleProject\Common\Convertor\CompoundWordConvertor;
+
+echo CompoundWordConvertor::convertToPascalCase("Hello World") . "\n";
+// HelloWorld
+
+echo CompoundWordConvertor::convertToCamelCase("Hello World") . "\n";
+// helloWorld
+
+echo CompoundWordConvertor::convertToSnakeCase("Hello World")  . "\n";
+// hello_world
+```
+**Known issues**
+Converting an already converted type will fail. Example:
+```
+<?php
+require_once 'vendor/autoload.php';
+
+use NeedleProject\Common\Convertor\CompoundWordConvertor;
+
+echo CompoundWordConvertor::convertToCamelCase("fooBar");
+// will output "foobar", not fooBar
+
+echo CompoundWordConvertor::convertToPascalCase("FooBar");
+// will output "Foobar", not FooBar
+
+echo CompoundWordConvertor::convertToSnakeCase("FOO BAR");
+// will output "f_o_o_b_a_r", not "foo_bar"
+```
+### 2. ArrayHelper
+Searches for a key in depth and retrieves it or state it's presense.
+**Usage**
+```
+<?php
+require_once 'vendor/autoload.php';
+
+use NeedleProject\Common\Helper\ArrayHelper;
+
+$searchFor = ['level1', 'level2', 'level3'];
+$searchIn = [
+    'level1' => [
+        'level2' => [
+            'level3' => 'A value'
+        ]
+    ]
+];
+
+$helper = new ArrayHelper();
+if ($helper->hasKeysInDepth($searchIn, $searchFor)) {
+    echo $helper->getValueFromDepth($searchIn, $searchFor);
+    // A value
 }
 ```
-Afterwards run `composer install` or `composer update` depending on the context.
-## 1.2. Cloning repository using git
+### 3. Error to Exception
+Converts a PHP error to an Exception.
+Error level constans are the PHP's default ones that can be found [here](http://php.net/manual/ro/function.error-reporting.php "here").
 ```
-git clone https://github.com/needle-project/common.git
-```
-Run `composer install` in the library path.
+<?php
+require_once 'vendor/autoload.php';
 
+use NeedleProject\Common\Util\ErrorToExceptionConverter;
+
+class CustomException extends \Exception {
+}
+
+$convertor = new ErrorToExceptionConverter();
+$convertor->convertErrorsToExceptions(E_ALL, CustomException::class);
+
+try {
+    print(a);
+} catch (\Exception $e) {
+    echo get_class($e) . "\n";
+    echo $e->getMessage();
+}
+
+// restore the previous state of error handling
+$convertor->restoreErrorHandler();
+```
+### 4. ClassFinder
+Searches for a class of a certain sub-type.
+```
+<?php
+require_once 'vendor/autoload.php';
+
+use NeedleProject\Common\ClassFinder;
+
+$classFinder = new ClassFinder(
+    __DIR__ . DIRECTORY_SEPARATOR . 'tests' . DIRECTORY_SEPARATOR . 'fixtures',
+    \Fixture\BaseInterface::class
+);
+$foundClasses = $classFinder->findClasses();
+
+print_r($foundClasses);
+php test.php
+// Array
+// (
+//    [0] => Fixture\Path\ClassList\BazClass
+//    [1] => Fixture\Path\ClassList\GodClass
+//    [2] => Fixture\Path\FooClass
+// )
+```
+## Contribute
+Feel free to contribute:
+- State ideeas
+- Open pull request with improvements/bug-fixes
