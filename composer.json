@@ -17,7 +17,7 @@
   "require-dev": {
     "squizlabs/php_codesniffer": "*",
     "phpmd/phpmd" : "@stable",
-    "phpunit/phpunit": "6.*"
+    "phpunit/phpunit": "6.*|5.*"
   },
   "autoload": {
     "psr-4": {"NeedleProject\\Common\\": "src/"}
