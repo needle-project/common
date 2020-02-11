@@ -8,7 +8,7 @@ class ErrorToExceptionConverterTest extends TestCase
     /**
      * Restore base error handler after each test
      */
-    public function tearDown(): void
+    public function tearDown()
     {
         \restore_error_handler();
     }
