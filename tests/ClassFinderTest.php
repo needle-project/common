@@ -37,10 +37,9 @@ class ClassFinderTest extends TestCase
             \Fixture\BaseInterface::class
         );
 
-        $loggerMock = $this->getMockBuilder(
-            LoggerInterface::class
-        );
-        $loggerMock = $loggerMock->getMock();
+        $loggerMock = $this->getMockBuilder(LoggerInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $loggerMock->expects($this->atLeastOnce())
             ->method('log')
             ->will($this->returnValue(null));
