@@ -1,7 +1,8 @@
 <?php
 namespace NeedleProject\Common\Helper;
 
-use PHPUnit_Framework_TestCase as TestCase;
+use NeedleProject\Common\Exception\NotFoundException;
+use PHPUnit\Framework\TestCase;
 
 class ArrayHelperTest extends TestCase
 {
@@ -32,24 +33,24 @@ class ArrayHelperTest extends TestCase
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      * @dataProvider provideExceptionScenarios
      * @param $notArray
      */
     public function testHasKeyException($notArray)
     {
         $arrayHelper = new ArrayHelper();
+        $this->expectException(\InvalidArgumentException::class);
         $arrayHelper->hasKeysInDepth($notArray, []);
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      * @dataProvider provideExceptionScenarios
      * @param $notArray
      */
     public function testGetValueException($notArray)
     {
         $arrayHelper = new ArrayHelper();
+        $this->expectException(\InvalidArgumentException::class);
         $arrayHelper->getValueFromDepth($notArray, []);
     }
 
@@ -76,15 +77,13 @@ class ArrayHelperTest extends TestCase
     public function testFailGetValue($array, $keys)
     {
         $arrayHelper = new ArrayHelper();
-        $arrayHelper->getValueFromDepth($array, $keys);
+        $this->assertNotNull($arrayHelper->getValueFromDepth($array, $keys));
     }
 
-    /**
-     * @expectedException \NeedleProject\Common\Exception\NotFoundException
-     */
     public function testNotFoundGetValue()
     {
         $arrayHelper = new ArrayHelper();
+        $this->expectException(NotFoundException::class);
         $arrayHelper->getValueFromDepth(['a' => 'b'], ['a', 'c']);
     }
 

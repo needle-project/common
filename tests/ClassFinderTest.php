@@ -1,9 +1,10 @@
 <?php
 namespace NeedleProject\Common;
 
+use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 
-class ClassFinderTest extends \PHPUnit_Framework_TestCase
+class ClassFinderTest extends TestCase
 {
     /**
      * @dataProvider provideScenarios

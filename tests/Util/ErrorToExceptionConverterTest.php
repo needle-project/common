@@ -1,43 +1,35 @@
 <?php
 namespace NeedleProject\Common\Util;
 
-use PHPUnit_Framework_TestCase as TestCase;
-use PHPUnit_Framework_Error as Error;
+use PHPUnit\Framework\TestCase;
 
 class ErrorToExceptionConverterTest extends TestCase
 {
     /**
      * Restore base error handler after each test
      */
-    public function tearDown()
+    public function tearDown(): void
     {
         \restore_error_handler();
     }
 
-    /**
-     * @expectedException \Exception
-     */
     public function testHandler()
     {
         $exceptionConverter = new ErrorToExceptionConverter();
         $exceptionConverter->convertErrorsToExceptions();
+
+        $this->expectException(\Exception::class);
         trigger_error("Dummy", E_USER_ERROR);
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testCustomException()
     {
         $exceptionConverter = new ErrorToExceptionConverter();
         $exceptionConverter->convertErrorsToExceptions(E_ALL, \RuntimeException::class);
+        $this->expectException(\RuntimeException::class);
         trigger_error("Dummy", E_USER_ERROR);
     }
 
-    /**
-     * @expectedException \PHPUnit_Framework_Error
-     * @expectedExceptionMessage Dummy
-     */
     public function testRestore()
     {
         $exceptionConverter = new ErrorToExceptionConverter();
@@ -52,6 +44,9 @@ class ErrorToExceptionConverterTest extends TestCase
         }
 
         $exceptionConverter->restoreErrorHandler();
+        $this->expectException(\PHPUnit\Framework\Error\Error::class);
+        $this->expectExceptionMessage("Dummy");
+
         trigger_error("Dummy", E_USER_ERROR);
     }
 }

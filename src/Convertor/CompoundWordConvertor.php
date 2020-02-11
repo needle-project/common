@@ -18,8 +18,22 @@ namespace NeedleProject\Common\Convertor;
 class CompoundWordConvertor
 {
     /**
-     * Convert any string to camelCase
-     * @param string $word
+     * Check if a string is camelCase
+     *
+     * @param string $item
+     * @return bool
+     */
+    public static function isCamelCase($item)
+    {
+        // validates if it starts with an uppercase or contains one of the separator: space, _ or -
+        preg_match('/^([A-Z]{1})|([\-_\s]+)/msU', $item, $results);
+        return empty($results);
+    }
+
+    /**
+     * Convert to camelCase
+     *
+     * @param $word
      * @return string
      */
     public static function convertToCamelCase($word)
@@ -34,6 +48,10 @@ class CompoundWordConvertor
      */
     public static function convertToPascalCase($word)
     {
+/*        if (self::isPascalCase($word)) {
+            return $word;
+        }
+*/
         // separate into block for easier readability
         $word = str_replace('_', ' ', $word);
         $word = strtolower($word);
@@ -51,11 +69,11 @@ class CompoundWordConvertor
         // append an _ to all capital letters. Ex: Abc will be converted to _Abc
         $word = preg_replace('/(?<!^)[A-Z]/', '_$0', $word);
         // replace spaces to underscore
-        $word = preg_replace('/\s/','_', $word);
+        $word = preg_replace('/\s/', '_', $word);
         // replace multiple spaces to one underscore
-        $word = preg_replace('/\s\s+/','_', $word);
+        $word = preg_replace('/\s\s+/', '_', $word);
         // replace multiple underscores to one underscore
-        $word = preg_replace('/([_]+)/','_', $word);
+        $word = preg_replace('/([_]+)/', '_', $word);
         return strtolower($word);
     }
 }

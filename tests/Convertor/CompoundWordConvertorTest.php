@@ -44,6 +44,15 @@ class CompoundWordConvertorTest extends TestCase
         );
     }
 
+    /**
+     * @dataProvider provideIsCamelCaseScenarios
+     * @param $input
+     */
+    public function testIsCamelCaseTrue($input)
+    {
+        $this->assertTrue(CompoundWordConvertor::isCamelCase($input));
+    }
+
     public function provideCamelCaseScenarios()
     {
         return [
@@ -63,8 +72,8 @@ class CompoundWordConvertorTest extends TestCase
             ['foo_a', 'FooA'],
             ['FOOO', 'Fooo'],
             ['fOoOoOo BaRrRr', 'FooooooBarrrr'],
-            ['Hello World', 'HelloWorld']
-            // @needs a fix: ['FooBar', 'FooBar']
+            ['Hello World', 'HelloWorld'],
+            // @need fix ['FooBar', 'FooBar']
         ];
     }
 
@@ -74,9 +83,17 @@ class CompoundWordConvertorTest extends TestCase
             ['FooBar', 'foo_bar'],
             ['fooBarBaz', 'foo_bar_baz'],
             ['foo_bar', 'foo_bar'],
-            ['Hello World', 'hello_world']
-            // @needs a fix: ['FOO BAR', 'foo_bar'],
-            // @needs a fix: ['SimpleXML', 'simple_xml']
+            ['Hello World', 'hello_world'],
+            // @need fix ['FOO BAR', 'foo_bar'],
+            // @need fix ['SimpleXML', 'simple_xml']
+        ];
+    }
+
+    public function provideIsCamelCaseScenarios()
+    {
+        return [
+            ['fooBar'],
+            ['fooBarBaz']
         ];
     }
 }
