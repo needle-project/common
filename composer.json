@@ -11,13 +11,13 @@
     }
   ],
   "require": {
-    "php": ">=5.5|7.*",
+    "php": ">=5.5|7.0.*|7.1.*|7.2.*7.3.*",
     "psr/log": "1.*"
   },
   "require-dev": {
     "squizlabs/php_codesniffer": "*",
     "phpmd/phpmd" : "@stable",
-    "phpunit/phpunit": "6.*|5.*"
+    "phpunit/phpunit": "6.*"
   },
   "autoload": {
     "psr-4": {"NeedleProject\\Common\\": "src/"}
